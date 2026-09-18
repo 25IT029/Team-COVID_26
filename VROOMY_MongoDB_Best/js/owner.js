@@ -2,6 +2,11 @@ const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;'
 async function renderOwnerVehicles(){
  const list=document.getElementById('ownerVehicleList');if(!list)return;
  if(!requireLogin())return;
+ const current=getStoredUser();
+ if(current && !['owner','admin'].includes(current.role)){
+   list.innerHTML='<div class="empty">Your account is a renter account. Create an Owner account (or log in as an owner) to list a vehicle.</div>';
+   return;
+ }
  try{
   const vehicles=await api('/vehicles/mine');
   list.innerHTML=vehicles.length?vehicles.map(v=>`<article class="vehicle-card"><div class="card-body"><span class="pill">● ${v.verified?'Verified':'Pending verification'}</span><h3 class="card-title" style="margin-top:12px">${escapeHtml(v.name)}</h3><div class="card-meta">${escapeHtml(v.type)} · 📍 ${escapeHtml(v.location)}</div><p class="card-price">₹${v.price} <small>/ hour</small></p><button class="btn btn-outline" type="button" data-delete-vehicle="${v.id}" style="width:100%;color:#b42318;border-color:#f0b7b2">Delete vehicle</button></div></article>`).join(''):'<div class="empty">You have not registered any vehicles yet.</div>';
@@ -11,6 +16,11 @@ document.addEventListener('DOMContentLoaded',()=>{
  const form=document.getElementById('vehicleListing');
  form?.addEventListener('submit',async event=>{
   event.preventDefault(); if(!requireLogin())return;
+  const current=getStoredUser();
+  if(current && !['owner','admin'].includes(current.role)){
+    alert('Please log in with an Owner account to list a vehicle.');
+    return;
+  }
   const f=event.target;
   try{
    const item=await api('/vehicles',{method:'POST',body:JSON.stringify({

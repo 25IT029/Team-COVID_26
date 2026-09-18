@@ -1,27 +1,7 @@
-# VROOMY — MongoDB-backed hackathon build
+# VROOMY - MongoDB Hackathon Build
 
-## What changed
-This version converts the original localStorage/demo data flow into a real web app flow:
-
-Frontend -> Express REST API -> Mongoose -> MongoDB Atlas
-
-Implemented:
-- MongoDB Atlas connection
-- Mongoose models for users, vehicles, bookings, agreements, reviews and rides
-- Registration/login with bcrypt + JWT
-- Vehicle listing/search/detail/create/delete
-- Rental booking with server-side price calculation and overlap protection
-- Demo payment and agreement endpoints
-- MongoDB-backed shared rides
-- Admin summary APIs
-- Existing HTML/CSS UI preserved as much as possible
-
-## Setup
-
-1. Copy `.env.example` to `.env`.
-2. Put your MongoDB Atlas URI in `MONGODB_URI`.
-3. Set a private `JWT_SECRET`.
-4. In the project root:
+## Start
+Open a terminal in `backend`:
 
 ```bash
 npm install
@@ -29,13 +9,35 @@ npm run seed
 npm start
 ```
 
-Open http://localhost:5000
+Open: http://localhost:5000
 
-The seed command creates demo vehicles and a demo owner:
+## Environment
+The backend reads `backend/.env`. Do not commit `.env` to GitHub.
+
+Required:
+- PORT
+- MONGODB_URI
+- JWT_SECRET
+
+## Demo owner
 - Email: demo.owner@vroomy.local
 - Password: Demo@12345
 
 ## Important
-Do not commit `.env` or share MongoDB/JWT secrets in GitHub.
+Use an Owner account on **List & Earn**. A normal renter account cannot create vehicle listings.
 
-The rental booking uses the MongoDB ObjectId from the vehicle returned by `/api/vehicles` and the authenticated user's ObjectId from the JWT. This avoids the previous `Valid userId and vehicleId are required` issue caused by local numeric demo IDs.
+## Data flow
+Frontend -> Express REST API -> Mongoose -> MongoDB Atlas
+
+Vehicle booking IDs always use MongoDB ObjectIds. The frontend does not connect directly to MongoDB.
+
+## Main API
+- POST /api/auth/register
+- POST /api/auth/login
+- GET /api/vehicles
+- POST /api/vehicles
+- GET /api/vehicles/mine
+- GET /api/vehicles/:id
+- POST /api/bookings
+- GET /api/bookings/my
+- GET /api/health

@@ -8,7 +8,10 @@ async function api(path, options={}) {
   const token=getToken(); if(token) headers.Authorization='Bearer '+token;
   const res=await fetch(API_BASE+path,{...options,headers});
   let data={}; try{data=await res.json()}catch{}
-  if(!res.ok) throw new Error(data.message||'Request failed');
+  if(!res.ok) {
+    const message=data.message||`Request failed (${res.status})`;
+    throw new Error(message);
+  }
   return data;
 }
 function setSession(data){localStorage.setItem('vroomyToken',data.token);localStorage.setItem('vroomyUser',JSON.stringify(data.user))}
