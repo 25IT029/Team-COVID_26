@@ -1,0 +1,16 @@
+function rideCard(r){return `<article class="ride-card"><div class="card-top"><div><span class="pill">Route match found</span><h3 class="ride-route">${r.from} <span style="color:#176bff">→</span> ${r.to}</h3></div><span class="rating">★ ${r.rating||5}</span></div><p class="card-meta">Driver: <b>${r.driver}</b> · ${r.vehicle}</p><div class="ride-details"><div><b>Departure</b>${formatDate(r.date)} · ${r.time}</div><div><b>Available</b>${r.seats} seats</div><div><b>Price</b>₹${r.price}/person</div><div><b>Match</b>92% route match</div></div><div class="card-actions"><a class="btn btn-outline" href="ride-details.html?id=${r.id}">View ride</a><a class="btn btn-primary" href="ride-details.html?id=${r.id}">Book seat</a></div></article>`}
+async function getRides(params={}){const p=new URLSearchParams();Object.entries(params).forEach(([k,v])=>v&&p.set(k,v));return api('/rides?'+p.toString())}
+async function renderRides(list){const el=document.getElementById('rideResults');if(el)el.innerHTML=list?.length?list.map(rideCard).join(''):'<div class="empty">No matching rides.</div>'}
+document.addEventListener('DOMContentLoaded',async()=>{
+ const search=document.getElementById('rideSearch');
+ if(document.getElementById('rideResults')){
+  try{const list=await getRides();await renderRides(list)}catch(e){renderRides([])}
+  search?.addEventListener('submit',async e=>{e.preventDefault();const f=e.target;try{await renderRides(await getRides({from:f.from.value,to:f.to.value,date:f.date.value}))}catch(err){alert(err.message)}})
+ }
+ const offer=document.getElementById('offerRide');
+ offer?.addEventListener('submit',async e=>{e.preventDefault();if(!requireLogin())return;const f=e.target;try{const r=await api('/rides',{method:'POST',body:JSON.stringify({from:f.from.value,to:f.to.value,date:f.date.value,time:f.time.value,seats:Number(f.seats.value),price:Number(f.price.value),vehicle:f.vehicle.value})});showModal('Ride published!',`Your ${r.from} → ${r.to} ride is now visible.`);f.reset()}catch(err){alert(err.message)}});
+ const panel=document.getElementById('rideDetail');
+ if(panel){const id=new URLSearchParams(location.search).get('id');try{const r=await api('/rides');const item=r.find(x=>x.id===id)||r[0];if(!item)throw new Error('Ride not found.');panel.innerHTML=`<span class="pill">92% route match</span><h1 class="section-title">${item.from} → ${item.to}</h1><p>Travel with ${item.driver} in a ${item.vehicle}. Verified driver with <span class="rating">★ ${item.rating}</span>.</p><div class="ride-details"><div><b>Date</b>${formatDate(item.date)}</div><div><b>Departure</b>${item.time}</div><div><b>Seats available</b>${item.seats}</div><div><b>Price</b>₹${item.price} per seat</div></div>`;document.getElementById('ridePrice').value=item.price;document.getElementById('availableSeats').textContent=item.seats}catch(e){panel.innerHTML=`<div class="empty">${e.message}</div>`}}
+});
+function updateSeatTotal(){const n=+document.getElementById('seatCount').value,p=+document.getElementById('ridePrice').value;document.getElementById('seatTotal').textContent='₹'+n*p}
+function confirmRide(e){e.preventDefault();if(!requireLogin())return;showModal('Demo seat booking','For the hackathon prototype, seat booking is shown in the UI. Rental bookings are fully stored in MongoDB.')}
