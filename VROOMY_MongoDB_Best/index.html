@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+	<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>VRUMY — Move Smart. Share More.</title>
@@ -56,6 +61,15 @@
 					<div class="float-card top">Verified rides <b>92% match</b></div>
 					<div class="float-card bottom">Your next trip <b>starts here</b></div>
 				</div>
+			</div>
+		</section>
+
+		<section class="section" id="map-section">
+			<div class="container">
+				<span class="eyebrow">EXPLORE YOUR CITY</span>
+				<h2 class="section-title">Find rides and rentals near you</h2>
+				<p>Browse available travel options on the map.</p>
+				<div id="city-map" aria-label="Map showing available rides and rentals"></div>
 			</div>
 		</section>
 

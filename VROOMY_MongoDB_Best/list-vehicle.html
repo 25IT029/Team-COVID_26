@@ -30,7 +30,7 @@
           <div class="field"><label>Available from</label><input name="available" type="date" required></div>
           <div class="field"><label>Number plate</label><input name="numberPlate" required placeholder="e.g. GJ05AB1234"></div>
           <div class="field"><label>Ownership papers</label><input type="file" name="ownershipPaper" required></div>
-          <div class="field"><label>Vehicle picture</label><input type="file" name="vehiclePicture" accept="image/*" required></div>
+          <div class="field"><label>Vehicle picture (optional)</label><input type="file" name="vehiclePicture" accept="image/*"></div>
           <div class="field"><label>Insurance</label><input type="file" name="insurance" required></div>
           <div class="field"><label>PUC certificate</label><input type="file" name="puc" required></div>
           <button class="btn btn-primary" style="width:100%;margin-top:17px">List my vehicle</button>
@@ -38,7 +38,9 @@
       </aside>
     </section>
     <section class="container section" style="padding-top:20px">
-      <span class="eyebrow">YOUR LISTINGS</span><h2 class="section-title">Your registered vehicles</h2><div class="vehicle-grid" id="ownerVehicleList"></div>
+      <span class="eyebrow">YOUR EARNINGS</span><h2 class="section-title">Your registered vehicles</h2>
+      <div id="ownerEarnings"></div>
+      <div class="vehicle-grid" id="ownerVehicleList"></div>
     </section>
   </main>
   <div class="modal" id="successModal"><div class="modal-box"><div class="modal-icon">✓</div><h2></h2><p></p><a class="btn btn-primary" href="rental.html">View rentals</a></div></div>

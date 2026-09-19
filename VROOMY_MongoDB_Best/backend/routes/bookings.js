@@ -35,19 +35,7 @@ router.post('/', requireAuth, async (req,res)=>{
 
 router.get('/my', requireAuth, async(req,res)=>{
   const docs=await Booking.find({userId:req.user._id}).populate('vehicleId','name type location image price').sort({createdAt:-1}).lean();
-  res.json(docs.map(b=>({
-    ...b,
-    id:b._id.toString(),
-    userId:b.userId.toString(),
-    vehicleId:b.vehicleId ? {
-      id:b.vehicleId._id.toString(),
-      name:b.vehicleId.name,
-      type:b.vehicleId.type,
-      location:b.vehicleId.location,
-      image:b.vehicleId.image,
-      price:b.vehicleId.price
-    } : null
-  })));
+  res.json(docs.map(b=>({...b,id:b._id.toString(),userId:b.userId.toString(),vehicleId:b.vehicleId?b.vehicleId._id.toString():null})));
 });
 
 router.get('/:id', requireAuth, async(req,res)=>{
