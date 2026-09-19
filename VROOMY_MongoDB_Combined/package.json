@@ -1,0 +1,1 @@
+{"name":"vroomy-hackathon","version":"1.0.0","private":true,"scripts":{"start":"node backend/server.js","seed":"node backend/seed.js"}}
